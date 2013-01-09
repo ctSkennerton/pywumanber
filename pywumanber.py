@@ -154,7 +154,9 @@ class WuManber:
         @verbose  boolean, whether to use the callback to print results or not
         @returns: int, the number of matches found in the text
     """
-    self.keydict.clear()
+    for key in self.keydict.keys():
+        del self.keydict[key][:]
+
     #s = time.time()
     self.__loadText__(text)
     if nocase:
