@@ -51,7 +51,7 @@ class WuManber:
         @text: string,url or filename
     """
     if os.path.exists(text):
-      sys.stderr.write("loading text from existing file %s\n"%text)
+      #sys.stderr.write("loading text from existing file %s\n"%text)
       fd = open(text,'r')
       rawtext = fd.read()
       fd.close
@@ -73,7 +73,7 @@ class WuManber:
           self.ctext = c_char_p(self.text)
           self.len_ctext = c_int(len(self.text)) # TODO: check validity of this!
       else:
-        sys.stderr.write("Text not a file or url. Accepting it as such\n")
+        #sys.stderr.write("Text not a file or url. Accepting it as such\n")
         self.ctext = c_char_p(text)
         self.len_ctext = c_int(len(text))
     
@@ -84,10 +84,10 @@ class WuManber:
         @keys:  list, string or filename
     """
     if isinstance(keys,list):
-      sys.stderr.write("loading keywords from list\n")
+      #sys.stderr.write("loading keywords from list\n")
       self.keywords = keys
     elif os.path.exists(keys):
-        sys.stderr.write("loading keywords from file %s\n"%keys)
+        #sys.stderr.write("loading keywords from file %s\n"%keys)
         try:
           fd = open(keys,'r')
         except IOError,e:
@@ -102,7 +102,7 @@ class WuManber:
           if fd: fd.close()
     elif isinstance(keys,str):
       tmp = {}
-      sys.stderr.write("loading keywords from str %s\n"%keys)
+      #sys.stderr.write("loading keywords from str %s\n"%keys)
       kw = keys.split(",") # TODO: sanitize this?
       for k in kw:
         k = k.replace(",","")
@@ -154,7 +154,8 @@ class WuManber:
         @verbose  boolean, whether to use the callback to print results or not
         @returns: int, the number of matches found in the text
     """
-    s = time.time()
+    self.keydict.clear()
+    #s = time.time()
     self.__loadText__(text)
     if nocase:
       self.nocase = c_int(1)
@@ -168,5 +169,5 @@ class WuManber:
       cb = WM_CALLBACK(self.__callback__)
     wm_ret = self.so.wm_search_text(self.wm,self.ctext,self.len_ctext,
       cb,null_ptr2)
-    sys.stderr.write("search_text took %.2f seconds\n"%((time.time()-s)))
+    #sys.stderr.write("search_text took %.2f seconds\n"%((time.time()-s)))
     return wm_ret
