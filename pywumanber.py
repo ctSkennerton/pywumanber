@@ -23,7 +23,7 @@ from urllib2 import urlopen,URLError,HTTPError,Request
 WM_CALLBACK = CFUNCTYPE(c_int,c_int,c_int)
 
 class WuManber:
-  def __init__(self,keys,text,so='wumanber.so'):
+  def __init__(self,keys,so='wumanber.so'):
     """ Initialise the WuManber object with required parameters
         Use __loadText__ and __loadKeywords__ to generate CTypes
         @keys:  list, string or filename
@@ -31,7 +31,7 @@ class WuManber:
         @so:    name of the shared library linked to
     """
     from distutils.sysconfig import get_python_lib
-    self.so = CDLL(os.path.join(get_python_lib(),so))
+    self.so = CDLL(so)
     self.keywords =  None
     self.clist_of_cstrings = None # NOT A PYTHON TYPE
     self.len_clist_of_strings = None # NOT A PYTHON TYPE
@@ -41,7 +41,7 @@ class WuManber:
     self.nocase = None # NOT A PYTHON TYPE
     self.wm = None # NOT A PYTHON TYPE
     self.keydict = {}
-    self.__loadText__(text)
+    #self.__loadText__(text)
     self.__loadKeywords__(keys)
         
   def __loadText__(self,text):
@@ -148,13 +148,14 @@ class WuManber:
     self.keydict[idx].append(ptr)
     return 0
       
-  def search_text(self,nocase=True,verbose=False):
+  def search_text(self,text,nocase=True,verbose=False):
     """ search_text is responsible for actually performing the text search
         @nocase:  boolean, whether to use case sensitive searching or not
         @verbose  boolean, whether to use the callback to print results or not
         @returns: int, the number of matches found in the text
     """
     s = time.time()
+    self.__loadText__(text)
     if nocase:
       self.nocase = c_int(1)
     else:
