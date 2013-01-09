@@ -23,7 +23,7 @@ from urllib2 import urlopen,URLError,HTTPError,Request
 WM_CALLBACK = CFUNCTYPE(c_int,c_int,c_int)
 
 class WuManber:
-  def __init__(self,keys,so='wumanber.so'):
+  def __init__(self,keys,so='pywumanber.so'):
     """ Initialise the WuManber object with required parameters
         Use __loadText__ and __loadKeywords__ to generate CTypes
         @keys:  list, string or filename
